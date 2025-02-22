@@ -1,0 +1,10 @@
+<div *ngIf="!board.length">Please choose the difficulty above...</div>
+<table class="sudoku-board">
+  <tr *ngFor="let row of board; let rowIndex = index">
+    <td *ngFor="let cell of row; let colIndex = index">
+      <input *ngIf="editableCells[rowIndex][colIndex]" type="text" maxlength="1"
+             (input)="updateCell(rowIndex, colIndex, $event)"/>
+      <span *ngIf="!editableCells[rowIndex][colIndex]">{{ cell }}</span>
+    </td>
+  </tr>
+</table>
