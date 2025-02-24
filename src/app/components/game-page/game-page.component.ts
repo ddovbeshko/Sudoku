@@ -1,3 +1,4 @@
+import {BehaviorSubject, filter, Subject, switchMap, take, takeUntil} from 'rxjs';
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
@@ -6,7 +7,6 @@ import {IUpdate} from '../../models/update.model';
 import {SudokuService} from '../../services/sudoku.service';
 import {ControlsComponent} from '../controls/controls.component';
 import {SudokuBoardComponent} from '../sudoku-board/sudoku-board.component';
-import {BehaviorSubject, filter, Subject, switchMap, take, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-game-page',
@@ -16,7 +16,7 @@ import {BehaviorSubject, filter, Subject, switchMap, take, takeUntil} from 'rxjs
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamePageComponent implements OnInit, OnDestroy {
-  private destroyed$ = new Subject<void>();
+  private destroyed$: Subject<void> = new Subject<void>();
   board$: BehaviorSubject<Board | null> = new BehaviorSubject<Board | null>(null);
   editableCells: boolean[][] = [];
 

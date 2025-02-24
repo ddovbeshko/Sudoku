@@ -1,8 +1,8 @@
 import {CommonModule} from '@angular/common';
-import {SudokuService} from '../../services/sudoku.service';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 import {Difficulty} from '../../models/difficulty.model';
+import {SudokuService} from '../../services/sudoku.service';
 
 @Component({
   selector: 'app-controls',

@@ -1,13 +1,14 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {IUpdate} from '../../models/update.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {Board} from '../../models/board.model';
+import {IUpdate} from '../../models/update.model';
 
 @Component({
   selector: 'app-sudoku-board',
-  imports: [CommonModule],
   templateUrl: './sudoku-board.component.html',
   styleUrl: './sudoku-board.component.scss',
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SudokuBoardComponent {
