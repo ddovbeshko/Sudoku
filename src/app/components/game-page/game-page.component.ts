@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
 import {Board} from '../../models/board.model';
@@ -6,6 +6,7 @@ import {IUpdate} from '../../models/update.model';
 import {SudokuService} from '../../services/sudoku.service';
 import {ControlsComponent} from '../controls/controls.component';
 import {SudokuBoardComponent} from '../sudoku-board/sudoku-board.component';
+import {BehaviorSubject, filter, Subject, switchMap, take, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-game-page',
@@ -14,11 +15,12 @@ import {SudokuBoardComponent} from '../sudoku-board/sudoku-board.component';
   imports: [ControlsComponent, SudokuBoardComponent, CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GamePageComponent implements OnInit {
-  board: Board = [];
+export class GamePageComponent implements OnInit, OnDestroy {
+  private destroyed$ = new Subject<void>();
+  board$: BehaviorSubject<Board | null> = new BehaviorSubject<Board | null>(null);
   editableCells: boolean[][] = [];
 
-  get boarNotEditable () {
+  get boardNotEditable() {
     return this.editableCells.every(row => row.every(value => value === false));
   }
 
@@ -26,9 +28,11 @@ export class GamePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.board$.subscribe(board => {
+    this.service.board$.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe(board => {
       if (board) {
-        this.board = board;
+        this.board$.next(board);
         this.setEditableCells(board);
       }
     });
@@ -43,8 +47,12 @@ export class GamePageComponent implements OnInit {
   }
 
   solve(): void {
-    this.service.solveBoard(this.board).subscribe(res => {
-      this.board = res.solution;
+    this.service.board$.pipe(
+      take(1),
+      filter(board => !!board),
+      switchMap(board => this.service.solveBoard(board))
+    ).subscribe(response => {
+      this.board$.next(response.solution);
       this.resetEditableCells();
     });
   }
@@ -58,8 +66,17 @@ export class GamePageComponent implements OnInit {
   }
 
   validate(): void {
-    this.service.validateBoard(this.board).subscribe(res => {
-      alert(res.status === "solved" ? "Correct Solution!" : "Incorrect!");
-    });
+    this.service.board$.pipe(
+      take(1),
+      filter(board => !!board),
+      switchMap(board => this.service.validateBoard(board))
+    ).subscribe(response => {
+      alert(response.status === "solved" ? "Correct Solution!" : "Incorrect!");
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

@@ -1,20 +1,25 @@
 <div class="page-game d-flex flex-column align-items-center m-auto">
   <app-controls class="mb-3"></app-controls>
-  <app-sudoku-board class="m-auto"
-                    [board]="board"
-                    [editableCells]="editableCells"
-                    (updateEditable)="onUpdateEditable($event)"></app-sudoku-board>
-  <div *ngIf="board.length"
-       class="d-flex justify-content-around mt-4">
-    <button type="button"
-            class="btn btn-info mx-2"
-            [disabled]="boarNotEditable"
-            (click)="solve()">Solve
-    </button>
-    <button type="button"
-            class="btn btn-primary mx-2"
-            [disabled]="boarNotEditable"
-            (click)="validate()">Validate
-    </button>
-  </div>
+  <ng-container  *ngIf="board$ | async as board else noBoardData">
+    <app-sudoku-board class="m-auto"
+                      [board]="board"
+                      [editableCells]="editableCells"
+                      (updateEditable)="onUpdateEditable($event)"></app-sudoku-board>
+    <div *ngIf="board.length"
+         class="d-flex justify-content-around mt-4">
+      <button type="button"
+              class="btn btn-info mx-2"
+              [disabled]="boardNotEditable"
+              (click)="solve()">Solve
+      </button>
+      <button type="button"
+              class="btn btn-primary mx-2"
+              [disabled]="boardNotEditable"
+              (click)="validate()">Validate
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #noBoardData>
+    <div>Please choose the difficulty above...</div>
+  </ng-template>
 </div>

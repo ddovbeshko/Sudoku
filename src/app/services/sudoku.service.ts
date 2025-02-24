@@ -13,7 +13,9 @@ export class SudokuService {
 
   fetchBoard(difficulty: Difficulty): void {
     this.http.get<{ board: Board }>(`https://sugoku.onrender.com/board?difficulty=${difficulty}`)
-      .subscribe((response: { board: Board }) => this.board$.next(response.board));
+      .subscribe((response: { board: Board }) => {
+        this.board$.next(response.board);
+      });
   }
 
   solveBoard(board: Board): Observable<{ solution: Board }> {

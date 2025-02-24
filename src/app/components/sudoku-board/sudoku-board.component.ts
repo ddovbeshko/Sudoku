@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IUpdate} from '../../models/update.model';
 import {Board} from '../../models/board.model';
@@ -7,10 +7,11 @@ import {Board} from '../../models/board.model';
   selector: 'app-sudoku-board',
   imports: [CommonModule],
   templateUrl: './sudoku-board.component.html',
-  styleUrl: './sudoku-board.component.scss'
+  styleUrl: './sudoku-board.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SudokuBoardComponent {
-  @Input() board: Board = [];
+  @Input() board!: Board;
   @Input() editableCells: boolean[][] = [];
   @Output() updateEditable = new EventEmitter<IUpdate>();
 
