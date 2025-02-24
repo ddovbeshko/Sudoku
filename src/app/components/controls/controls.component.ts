@@ -16,6 +16,6 @@ export class ControlsComponent {
   }
 
   startGame(difficulty: Difficulty): void {
-    this.service.fetchBoard(difficulty as any);
+    this.service.fetchBoard(difficulty);
   }
 }
